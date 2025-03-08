@@ -5,40 +5,40 @@ export type ThemeSelectorData = {
     name: string;
     subtype?: {
         name: string;
-        themes: Theme[];
+        subjects: Subject[];
     };
-    themes: Theme[];
+    subjects: Subject[];
 };
 
 export const themeSelectorData: ThemeSelectorData[] = [
     {
         name: 'Mathématiques',
         id: 1,
-        themes: [
+        subjects: [
             {
                 id: 1,
                 name: 'Addition',
-                path: '/math/addition',
-                subjectId: 1,
+                path: 'addition',
+                type: 'addition'
             },
             {
                 id: 2,
                 name: 'Soustraction',
-                path: '/math/soustraction',
-                subjectId: 1,
+                path: 'soustraction',
+                type: 'soustraction'
             },
             {
                 id: 3,
                 name: 'Multiplication',
-                path: '/math/multiplication',
-                subjectId: 1,
+                path: 'multiplication',
+                type: 'multiplication'
             },
             {
                 id: 4,
                 name: 'Calculs aléatoires',
-                path: '/math/random-operation',
-                subjectId: 1,
+                path: 'random-operation',
+                type: 'random-operation'
             },
-        ]
+        ],
     },
 ];

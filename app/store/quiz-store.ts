@@ -2,7 +2,6 @@ import { create } from 'zustand';
 
 import { getMathQuestions } from '~/services/get-math-questions';
 import type { Question } from '~/lib/types';
-import type { CastleIcon } from 'lucide-react';
 
 export type QuizState = {
     name: string;

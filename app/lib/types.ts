@@ -2,6 +2,7 @@ export type Subject = {
     id: number;
     name: string;
     path: string;
+    type: string;
 }
 
 export type Theme = {
