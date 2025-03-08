@@ -1,6 +1,6 @@
 import type { Subject, Theme } from './types';
 
-type ThemeSelectorData = {
+export type ThemeSelectorData = {
     id: number;
     name: string;
     subtype?: {
@@ -39,6 +39,6 @@ export const themeSelectorData: ThemeSelectorData[] = [
                 path: '/math/random-operation',
                 subjectId: 1,
             },
-        ],
+        ]
     },
 ];

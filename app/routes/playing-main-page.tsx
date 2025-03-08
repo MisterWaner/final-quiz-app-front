@@ -1,3 +1,9 @@
+import ThemeChoicePage from '~/components/Main/ThemeChoicePage';
+
 export default function PlayingMainPage() {
-    return <div>Hello from Playing Main Page</div>;
+    return (
+        <>
+            <ThemeChoicePage />
+        </>
+    );
 }
