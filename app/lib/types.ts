@@ -1,13 +1,14 @@
 export type Subject = {
     id: number;
     name: string;
+    themes: Theme[];
     path: string;
-    type: string;
 }
 
 export type Theme = {
     id: number;
     name: string;
+    type: string;
     subjectId: number;
     path: string;
 }

@@ -11,8 +11,8 @@ import { useQuizStore } from '~/store/quiz-store';
 
 export default function Quiz() {
     const { type } = useParams();
+    const { theme } = useQuizStore();
 
-    const { name } = useQuizStore();
     const progress = useQuizStore((state) => state.progress);
     const totalProgress = useQuizStore((state) => state.totalProgress);
 
@@ -31,10 +31,18 @@ export default function Quiz() {
             ) : (
                 <>
                     <h2 className='text-3xl font-bold text-center'>
-                        {type?.toUpperCase()}
+                        {type
+                            ? type
+                                .split('-')
+                                .map(
+                                    (part) =>
+                                        part.charAt(0).toUpperCase() +
+                                        part.slice(1))
+                                .join(' ')
+                            : ''}
                     </h2>
                     <ContentSection>
-                        {name === 'Mathématiques' ? <QuestionCard /> : ''}
+                        <QuestionCard />
                     </ContentSection>
                     <ContentSection>
                         <ScoreIndicator />

@@ -1,22 +1,30 @@
 const BASE_URL = 'http://localhost:3001';
 
 import type { Question } from '~/lib/types';
+import { getSubjectWithThemes } from './get-subject-with-themes';
 
-export async function getMathQuestions(theme: string): Promise<Question[]> {
+export async function getMathQuestions(path: string): Promise<Question[]> {
+    const subjects = await getSubjectWithThemes();
+    const themes = subjects[0].themes;
+   
     try {
-        const response = await fetch(`${BASE_URL}/math/${theme}`, {
+        
+        const response = await fetch(`${BASE_URL}/math/${path}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
         });
+        console.log(response);
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch math questions');
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            return data;
+        } else {
+            console.error('Error fetching math questions:', response.status);
+            return [];
         }
-
-        const data = await response.json();
-        return data;
     } catch (error) {
         console.error('Error fetching math questions:', error);
         return [];

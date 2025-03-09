@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 
 import { getMathQuestions } from '~/services/get-math-questions';
-import type { Question } from '~/lib/types';
+import { getSubjectWithThemes } from '~/services/get-subject-with-themes';
+import type { Question, Subject } from '~/lib/types';
 
 export type QuizState = {
-    name: string;
-    isSelected: boolean;
     theme: string;
+    isSelected: boolean;
+    type: string;
     questions: Question[];
     userAnswer: string | number;
     currentQuestionIndex: number;
@@ -23,15 +24,8 @@ export type QuizState = {
 };
 
 type QuizAction = {
-    selectTheme: (
-        name: QuizState['name'],
-        theme: QuizState['theme'],
-        isSelected: QuizState['isSelected']
-    ) => void;
-    generateQuestion: (
-        theme: QuizState['theme'],
-        name: QuizState['name']
-    ) => Promise<void>;
+    getSubjectLists: () => Promise<Subject[]>;
+    generateQuestion: (type: QuizState['type']) => Promise<void>;
     handleNextQuestion: () => void;
     checkUserAnswer: (userAnswer: QuizState['userAnswer']) => void;
     incrementProgress: () => void;
@@ -47,15 +41,12 @@ type QuizAction = {
 };
 
 export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
-    name: '',
-    isSelected: false,
     theme: '',
+    isSelected: false,
+    type: '',
     questions: [],
     currentQuestionIndex: 0,
     totalQuestions: 10,
-    selectTheme(name, theme, isSelected) {
-        set({ name, theme, isSelected });
-    },
     userAnswer: '',
     dialogTitle: '',
     dialogTitleStyle: 'text-stone-950',
@@ -86,25 +77,27 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
         }
     },
 
-    // Questions
-    async generateQuestion(theme, name) {
+    async getSubjectLists(): Promise<Subject[]> {
         try {
-            let questions: Question[];
-
-            switch (name) {
-                case 'Mathématiques':
-                    questions = (await getMathQuestions(theme)).map(
-                        (question) => ({
-                            id: question.id,
-                            questionText: question.questionText,
-                            correctAnswer: question.correctAnswer,
-                        })
-                    );
-                    set({ questions, currentQuestionIndex: 0 });
-                    break;
-                default:
-                    break;
-            }
+            const subjects = await getSubjectWithThemes();
+            return subjects;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des thèmes', error);
+            return [];
+        }
+    },
+    // Questions
+    async generateQuestion(path: string) {
+        try {
+            const questions = await getMathQuestions(path);
+            console.log(questions);
+            questions.map((question) => ({
+                id: question.id,
+                questionText: question.questionText,
+                correctAnswer: question.correctAnswer,
+            }));
+            set({ questions, currentQuestionIndex: 0 });
+            console.log(questions);
         } catch (error) {
             console.error(
                 'Erreur lors de la récupération des questions',

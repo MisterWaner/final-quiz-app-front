@@ -56,7 +56,7 @@ export default function NextQuestionModal({
     return (
         <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <AlertDialogTrigger asChild>
-                <Button className='font-semibold w-2/6' onClick={handleSubmit}>
+                <Button className='font-semibold w-2/6 cursor-pointer' onClick={handleSubmit}>
                     Valider
                 </Button>
             </AlertDialogTrigger>
@@ -72,7 +72,7 @@ export default function NextQuestionModal({
                 <AlertDialogFooter>
                     <AlertDialogAction asChild className={dialogActionStyle}>
                         <Button
-                            className='font-semibold w-2/6'
+                            className='font-semibold w-2/6 cursor-pointer'
                             onClick={() => {
                                 handleNextQuestion();
                                 handleSetResetTimer();

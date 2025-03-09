@@ -33,7 +33,7 @@ export default function EndedDiscoveryModal() {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className='font-semibold w-3/6'>Terminer</Button>
+                <Button className='font-semibold w-3/6 cursor-pointer'>Terminer</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -48,7 +48,7 @@ export default function EndedDiscoveryModal() {
                 <AlertDialogFooter className='flex flex-row gap-2 mt-2'>
                     <AlertDialogAction asChild>
                         <Button
-                            className='font-semibold w-3/6 self-end'
+                            className='font-semibold w-3/6 self-end cursor-pointer'
                             onClick={() => handleRegister()}
                         >
                             Créer mon compte
@@ -57,7 +57,7 @@ export default function EndedDiscoveryModal() {
                     </AlertDialogAction>
                     <AlertDialogCancel asChild>
                         <Button
-                            className='font-semibold w-3/6'
+                            className='font-semibold w-3/6 bg-red-500 cursor-pointer hover:bg-red-600 hover:text-white' 
                             onClick={() => handleCancel()}
                             variant='destructive'
                         >
