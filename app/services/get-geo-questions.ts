@@ -1,17 +1,17 @@
 const BASE_URL = 'http://localhost:3001';
 
-import type { DirectQuestion } from '~/lib/types';
+import type { MultipleChoiceQuestion } from '~/lib/types';
 
-export async function getMathQuestions(path: string): Promise<DirectQuestion[]> {
+export async function getGeoQuestions(path: string): Promise<MultipleChoiceQuestion[]> {
     try {
-        
-        const response = await fetch(`${BASE_URL}/math/${path}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log(response);
+        const response = await fetch(`${BASE_URL}/geography/${path}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
 
         if (response.ok) {
             const data = await response.json();

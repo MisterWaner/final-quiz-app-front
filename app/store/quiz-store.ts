@@ -2,14 +2,24 @@ import { create } from 'zustand';
 
 import { getMathQuestions } from '~/services/get-math-questions';
 import { getSubjectWithThemes } from '~/services/get-subject-with-themes';
-import type { Question, Subject } from '~/lib/types';
+import type {
+    MultipleChoiceQuestion,
+    DirectQuestion,
+    TrueOrFalseQuestion,
+    Subject,
+} from '~/lib/types';
+import { getGeoQuestions } from '~/services/get-geo-questions';
+
 
 export type QuizState = {
     theme: string;
+    subjectName: string;
     isSelected: boolean;
     type: string;
-    questions: Question[];
-    userAnswer: string | number;
+    directQuestions: DirectQuestion[];
+    multipleChoiceQuestions: MultipleChoiceQuestion[];
+    trueOrFalseQuestions: TrueOrFalseQuestion[];
+    userAnswer: string | number | null;
     currentQuestionIndex: number;
     totalQuestions: number;
     dialogTitle: string;
@@ -42,9 +52,12 @@ type QuizAction = {
 
 export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     theme: '',
+    subjectName: '',
     isSelected: false,
     type: '',
-    questions: [],
+    directQuestions: [],
+    multipleChoiceQuestions: [],
+    trueOrFalseQuestions: [],
     currentQuestionIndex: 0,
     totalQuestions: 10,
     userAnswer: '',
@@ -86,18 +99,32 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
             return [];
         }
     },
+
     // Questions
     async generateQuestion(path: string) {
+        let { directQuestions, multipleChoiceQuestions, trueOrFalseQuestions } = get();
         try {
-            const questions = await getMathQuestions(path);
-            console.log(questions);
-            questions.map((question) => ({
-                id: question.id,
-                questionText: question.questionText,
-                correctAnswer: question.correctAnswer,
-            }));
-            set({ questions, currentQuestionIndex: 0 });
-            console.log(questions);
+            if (path.includes('math')) {
+                
+                directQuestions = await getMathQuestions(path);
+                console.log(directQuestions);
+                directQuestions.map((question) => ({
+                    id: question.id,
+                    questionText: question.questionText,
+                    correctAnswer: question.correctAnswer,
+                }));
+                set({ directQuestions, currentQuestionIndex: 0 });
+            } else if (path.includes('geography')) {
+                multipleChoiceQuestions = await getGeoQuestions(path);
+                console.log(multipleChoiceQuestions);
+                multipleChoiceQuestions.map((question) => ({
+                    id: question.id,
+                    questionText: question.questionText,
+                    choices: question.choices,
+                    correctAnswer: question.correctAnswer,
+                }));
+                set({ multipleChoiceQuestions, currentQuestionIndex: 0 });
+            }
         } catch (error) {
             console.error(
                 'Erreur lors de la récupération des questions',
@@ -106,7 +133,8 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
         }
     },
     handleNextQuestion() {
-        const { currentQuestionIndex, questions } = get();
+        const { currentQuestionIndex, directQuestions, multipleChoiceQuestions, trueOrFalseQuestions } = get();
+        let questions = directQuestions || multipleChoiceQuestions || trueOrFalseQuestions;
         if (questions && currentQuestionIndex < questions.length - 1) {
             set({ currentQuestionIndex: currentQuestionIndex + 1 });
         }
@@ -114,11 +142,14 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     checkUserAnswer(userAnswer) {
         const {
             currentQuestionIndex,
-            questions,
+            directQuestions,
+            multipleChoiceQuestions,
+            trueOrFalseQuestions,
             timer,
             stopTimer,
             incrementScore,
         } = get();
+        const questions = directQuestions || multipleChoiceQuestions || trueOrFalseQuestions;
         if (questions && currentQuestionIndex < questions.length - 1) {
             const currentQuestion = questions[currentQuestionIndex];
             if (currentQuestion.correctAnswer === userAnswer) {

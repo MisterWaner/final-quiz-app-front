@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuItem,
-    DropdownMenuGroup,
 } from '~/components/ui/dropdown-menu';
 import { Button } from '~/components/ui/button';
 
@@ -17,18 +14,17 @@ import type { Subject, Theme } from '~/lib/types';
 
 export default function ThemeSelector() {
     const { getSubjectLists, generateQuestion, setTimer } = useQuizStore();
-    
     const [subjects, setSubjects] = useState<Subject[]>([]);
-    
+
     useEffect(() => {
-        const fetchSubjects = async() => {
-            const subjectsList = await getSubjectLists();
-            setSubjects(subjectsList);
-            console.log(subjectsList);
-        }
+        const fetchSubjects = async () => {
+            const subjects = await getSubjectLists();
+            setSubjects(subjects);
+            console.log(subjects);
+        };
         fetchSubjects();
     }, []);
-    
+
     return (
         <div className='mt-4 flex flex-col md:flex-row gap-4 md:w-2/4'>
             {subjects.map(({ name, id, themes }) => (
@@ -49,7 +45,8 @@ export default function ThemeSelector() {
                                         setTimer(15);
                                     }}
                                 >
-                                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                                    {name.charAt(0).toUpperCase() +
+                                        name.slice(1)}
                                 </Link>
                             </DropdownMenuItem>
                         ))}
@@ -59,4 +56,3 @@ export default function ThemeSelector() {
         </div>
     );
 }
-

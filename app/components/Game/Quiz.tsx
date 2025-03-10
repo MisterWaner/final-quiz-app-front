@@ -8,13 +8,27 @@ import EndGameCard from './Card/EndGameCard';
 import QuestionCard from './Card/QuestionCard';
 
 import { useQuizStore } from '~/store/quiz-store';
+import QCMQuestionCard from './Card/QCMQuestionCard';
+import { useEffect, useState } from 'react';
+import type { Subject } from '~/lib/types';
 
 export default function Quiz() {
     const { type } = useParams();
-    const { theme } = useQuizStore();
 
+    const { getSubjectLists} = useQuizStore();
     const progress = useQuizStore((state) => state.progress);
     const totalProgress = useQuizStore((state) => state.totalProgress);
+
+    const [subjects, setSubjects] = useState<Subject[]>([]);
+
+    useEffect(() => {
+        getSubjectLists().then((subjects) => {
+            setSubjects(subjects);
+        });
+    }, []);
+
+    const name = subjects.map(subject => subject.name);
+    console.log(name);
 
     return (
         <Wrapper>
@@ -37,12 +51,17 @@ export default function Quiz() {
                                 .map(
                                     (part) =>
                                         part.charAt(0).toUpperCase() +
-                                        part.slice(1))
+                                        part.slice(1)
+                                )
                                 .join(' ')
                             : ''}
                     </h2>
                     <ContentSection>
-                        <QuestionCard />
+                        {name[0] === 'Mathématiques' ? (
+                            <QuestionCard />
+                        ) : (
+                            <QCMQuestionCard />
+                        )}
                     </ContentSection>
                     <ContentSection>
                         <ScoreIndicator />

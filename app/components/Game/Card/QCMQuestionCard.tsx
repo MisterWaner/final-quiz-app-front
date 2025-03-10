@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Card,
     CardHeader,
@@ -6,14 +6,15 @@ import {
     CardContent,
     CardFooter,
 } from '~/components/ui/card';
+import { RadioGroup } from '~/components/ui/radio-group';
 import { Label } from '~/components/ui/label';
-import { Input } from '~/components/ui/input';
 import Timer from '../Timer';
-import { useQuizStore } from '~/store/quiz-store';
-
 import NextQuestionModal from '../Modals/NextQuestionModal';
 
-export default function QuestionCard() {
+import { useQuizStore } from '~/store/quiz-store';
+import CustomRadioInput from '~/components/CustomRadioInput';
+
+export default function QCMQuestionCard() {
     const {
         questions,
         currentQuestionIndex,
@@ -24,6 +25,8 @@ export default function QuestionCard() {
         decrementTimer,
     } = useQuizStore();
     const userAnswer = useQuizStore((state) => state.userAnswer);
+
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -41,41 +44,53 @@ export default function QuestionCard() {
 
     const currentQuestion = questions[currentQuestionIndex];
 
-    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const value = event.target.value;
-        useQuizStore.setState({
-            userAnswer: value,
-        });
-    }
-
     function handleSetResetTimer() {
         resetTimer();
+    }
+
+    function handleSelectOption(option: string) {
+        setSelectedOption(option);
+        console.log(option);
+        useQuizStore.setState({
+            userAnswer: selectedOption,
+        });
     }
 
     return (
         <Card
             className='md:w-1/2 mx-auto mt-24'
             onMouseEnter={() => {
-                if (!isTimerRunning && timer > 0) startTimer(timer);
+                if (!isTimerRunning && timer > 0) {
+                    startTimer(timer);
+                }
             }}
         >
             <CardHeader>
                 <CardTitle>Question {currentQuestionIndex + 1}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className='text-sm italic'>{currentQuestion.questionText}</p>
-                <div className='grid grid-cols-3 items-center gap-4 mt-4'>
-                    <Label>Ta réponse :</Label>
-                    <Input
-                        type='text'
-                        className='col-span-2'
-                        placeholder='Réponse'
-                        onChange={handleInputChange}
-                        value={userAnswer as string}
-                        disabled={timer === 0}
-                        tabIndex={0}
-                    />
-                </div>
+                <p className='text-sm italic'>
+                    {currentQuestion?.questionText}
+                </p>
+                <Label className='mt-4'>Ta réponse :</Label>
+
+                <RadioGroup
+                    className='grid grid-cols-2 items-center gap-4 mt-4'
+                    value={selectedOption || undefined}
+                    onValueChange={handleSelectOption}
+                >
+                    {['Option 1', 'Option 2', 'Option3', 'Option 4'].map(
+                        (option) => (
+                            <CustomRadioInput
+                                label={option}
+                                value={option}
+                                id={option}
+                                key={option}
+                            />
+                        )
+                    )}
+                </RadioGroup>
+
                 <Timer />
             </CardContent>
             <CardFooter className='justify-end'>
