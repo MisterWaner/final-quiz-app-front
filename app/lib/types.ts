@@ -2,7 +2,7 @@ export type Subject = {
     id: number;
     name: string;
     themes: Theme[];
-    path: string;
+    subjectPath: string;
 };
 
 export type Theme = {
@@ -10,25 +10,40 @@ export type Theme = {
     name: string;
     type: string;
     subjectId: number;
-    path: string;
+    themePath: string;
 };
 
-export type MultipleChoiceQuestion = {
+export type Quiz = {
     id: number;
+    questionType: QuestionType;
+    questions: Question[];
+    themeId: Theme['id'];
+}
+
+export type QuestionType = "multiple-choice" | "true-or-false" | "direct";
+
+export interface QuestionBase {
+    id: number;
+    questionType: QuestionType;
+    theme: Theme;
     questionText: string;
+}
+
+export interface MultipleChoiceQuestion extends QuestionBase {
+    questionType: "multiple-choice";
     choices: string[];
     correctAnswer: string;
-};
+}
 
-export type TrueOrFalseQuestion = {
-    id: number;
-    questionText: string;
-    correctAnswer: string;
+export interface TrueOrFalseQuestion extends QuestionBase {
+    questionType: "true-or-false";
     choices: boolean[];
-};
+    correctAnswer: boolean | string;
+}
 
-export type DirectQuestion = {
-    id: number;
-    questionText: string;
+export interface DirectQuestion extends QuestionBase {
+    questionType: "direct";
     correctAnswer: string;
-};
+}
+
+export type Question = MultipleChoiceQuestion | TrueOrFalseQuestion | DirectQuestion;

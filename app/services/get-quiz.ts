@@ -1,18 +1,23 @@
 import type {
-    DirectQuestion,
-    MultipleChoiceQuestion,
-    TrueOrFalseQuestion,
+    Quiz,
+    Subject,
+    Theme,
 } from '~/lib/types';
 
 const BASE_URL = 'http://localhost:3001';
 
-export async function getQuestions(
-    path: string
+export type PathProps = {
+    subjectPath: Subject['subjectPath'];
+    themePath: Theme['themePath'];
+}
+
+export async function getQuiz(
+    { subjectPath, themePath }: PathProps
 ): Promise<
-    MultipleChoiceQuestion[] | TrueOrFalseQuestion[] | DirectQuestion[]
+    Quiz
 > {
     try {
-        const response = await fetch(`${BASE_URL}/${path}`, {
+        const response = await fetch(`${BASE_URL}/${subjectPath}/${themePath}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,15 +25,15 @@ export async function getQuestions(
         });
 
         if (response.ok) {
-            const data = await response.json();
+            const data = await response.json() as Quiz;
             console.log(data);
             return data;
         } else {
             console.error('Error fetching questions:', response.status);
-            return [];
+            return {} as Quiz;
         }
     } catch (error) {
         console.error('Error fetching questions:', error);
-        return [];
+        return {} as Quiz;
     }
 }

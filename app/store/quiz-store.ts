@@ -1,20 +1,25 @@
 import { create } from 'zustand';
-
 import { getMathQuestions } from '~/services/get-math-questions';
+import { getQuiz, type PathProps } from '~/services/get-quiz';
 import { getSubjectWithThemes } from '~/services/get-subject-with-themes';
 import type {
     MultipleChoiceQuestion,
     DirectQuestion,
     TrueOrFalseQuestion,
     Subject,
+    Quiz,
+    QuestionType,
 } from '~/lib/types';
 import { getGeoQuestions } from '~/services/get-geo-questions';
+//import { getQuestionType } from '~/lib/get-question-type';
 
 
 export type QuizState = {
     theme: string;
-    subjectName: string;
+    subject: string;
     isSelected: boolean;
+    questionType: string;
+    quiz: Quiz;
     type: string;
     directQuestions: DirectQuestion[];
     multipleChoiceQuestions: MultipleChoiceQuestion[];
@@ -35,7 +40,7 @@ export type QuizState = {
 
 type QuizAction = {
     getSubjectLists: () => Promise<Subject[]>;
-    generateQuestion: (type: QuizState['type']) => Promise<void>;
+    generateQuiz: (path: PathProps) => Promise<Quiz | {}>;
     handleNextQuestion: () => void;
     checkUserAnswer: (userAnswer: QuizState['userAnswer']) => void;
     incrementProgress: () => void;
@@ -52,9 +57,11 @@ type QuizAction = {
 
 export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     theme: '',
-    subjectName: '',
+    subject: '',
     isSelected: false,
+    questionType: '',
     type: '',
+    quiz: {} as Quiz,
     directQuestions: [],
     multipleChoiceQuestions: [],
     trueOrFalseQuestions: [],
@@ -100,36 +107,18 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
         }
     },
 
-    // Questions
-    async generateQuestion(path: string) {
+    async generateQuiz({ subjectPath, themePath }: PathProps): Promise<Quiz | {}> {
         let { directQuestions, multipleChoiceQuestions, trueOrFalseQuestions } = get();
         try {
-            if (path.includes('math')) {
-                
-                directQuestions = await getMathQuestions(path);
-                console.log(directQuestions);
-                directQuestions.map((question) => ({
-                    id: question.id,
-                    questionText: question.questionText,
-                    correctAnswer: question.correctAnswer,
-                }));
-                set({ directQuestions, currentQuestionIndex: 0 });
-            } else if (path.includes('geography')) {
-                multipleChoiceQuestions = await getGeoQuestions(path);
-                console.log(multipleChoiceQuestions);
-                multipleChoiceQuestions.map((question) => ({
-                    id: question.id,
-                    questionText: question.questionText,
-                    choices: question.choices,
-                    correctAnswer: question.correctAnswer,
-                }));
-                set({ multipleChoiceQuestions, currentQuestionIndex: 0 });
-            }
+            const quiz = await getQuiz({ subjectPath, themePath });
+            
+            return quiz
         } catch (error) {
             console.error(
                 'Erreur lors de la récupération des questions',
                 error
             );
+            return {} as Quiz;
         }
     },
     handleNextQuestion() {

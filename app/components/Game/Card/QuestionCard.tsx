@@ -10,20 +10,40 @@ import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
 import Timer from '../Timer';
 import { useQuizStore } from '~/store/quiz-store';
+import type { DirectQuestion, MultipleChoiceQuestion, QuestionType, TrueOrFalseQuestion } from '~/lib/types';
 
 import NextQuestionModal from '../Modals/NextQuestionModal';
 
 export default function QuestionCard() {
     const {
-        questions,
+        directQuestions,
+        multipleChoiceQuestions,
+        trueOrFalseQuestions,
         currentQuestionIndex,
         timer,
         isTimerRunning,
         startTimer,
         resetTimer,
         decrementTimer,
+        questionType,
     } = useQuizStore();
     const userAnswer = useQuizStore((state) => state.userAnswer);
+
+    let questions: (DirectQuestion | MultipleChoiceQuestion | TrueOrFalseQuestion)[];
+    switch (questionType) {
+        case 'multiple-choice':
+            questions = multipleChoiceQuestions;
+            break;
+        case 'true-or-false':
+            questions = trueOrFalseQuestions;
+            break;
+        case 'direct':
+            questions = directQuestions;
+            break;
+        default:
+            questions = [];
+            break;
+    }
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -38,6 +58,8 @@ export default function QuestionCard() {
     }, [isTimerRunning, decrementTimer]);
 
     if (!questions || questions.length === 0) return null;
+
+    console.log(questions);
 
     const currentQuestion = questions[currentQuestionIndex];
 
