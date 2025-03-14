@@ -3,27 +3,21 @@ import { getMathQuestions } from '~/services/get-math-questions';
 import { getQuiz, type PathProps } from '~/services/get-quiz';
 import { getSubjectWithThemes } from '~/services/get-subject-with-themes';
 import type {
-    MultipleChoiceQuestion,
-    DirectQuestion,
-    TrueOrFalseQuestion,
     Subject,
     Quiz,
     QuestionType,
 } from '~/lib/types';
 import { getGeoQuestions } from '~/services/get-geo-questions';
-//import { getQuestionType } from '~/lib/get-question-type';
 
 
 export type QuizState = {
     theme: string;
     subject: string;
     isSelected: boolean;
-    questionType: string;
+    questionType: QuestionType;
     quiz: Quiz;
     type: string;
-    directQuestions: DirectQuestion[];
-    multipleChoiceQuestions: MultipleChoiceQuestion[];
-    trueOrFalseQuestions: TrueOrFalseQuestion[];
+    questions: Quiz['questions'];
     userAnswer: string | number | null;
     currentQuestionIndex: number;
     totalQuestions: number;
@@ -59,12 +53,10 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     theme: '',
     subject: '',
     isSelected: false,
-    questionType: '',
+    questionType: '' as QuestionType,
     type: '',
     quiz: {} as Quiz,
-    directQuestions: [],
-    multipleChoiceQuestions: [],
-    trueOrFalseQuestions: [],
+    questions: [],
     currentQuestionIndex: 0,
     totalQuestions: 10,
     userAnswer: '',
@@ -108,11 +100,14 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     },
 
     async generateQuiz({ subjectPath, themePath }: PathProps): Promise<Quiz | {}> {
-        let { directQuestions, multipleChoiceQuestions, trueOrFalseQuestions } = get();
+        let { questionType, quiz, questions } = get();
         try {
-            const quiz = await getQuiz({ subjectPath, themePath });
+            quiz = await getQuiz({ subjectPath, themePath });
+            questionType = quiz.questionType
+            questions = quiz.questions
+            set({ questionType, quiz, questions })
             
-            return quiz
+            return { quiz, questionType }
         } catch (error) {
             console.error(
                 'Erreur lors de la récupération des questions',
@@ -122,8 +117,8 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
         }
     },
     handleNextQuestion() {
-        const { currentQuestionIndex, directQuestions, multipleChoiceQuestions, trueOrFalseQuestions } = get();
-        let questions = directQuestions || multipleChoiceQuestions || trueOrFalseQuestions;
+        const  { currentQuestionIndex, questions } = get();
+        
         if (questions && currentQuestionIndex < questions.length - 1) {
             set({ currentQuestionIndex: currentQuestionIndex + 1 });
         }
@@ -131,14 +126,11 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
     checkUserAnswer(userAnswer) {
         const {
             currentQuestionIndex,
-            directQuestions,
-            multipleChoiceQuestions,
-            trueOrFalseQuestions,
+            questions,
             timer,
             stopTimer,
             incrementScore,
         } = get();
-        const questions = directQuestions || multipleChoiceQuestions || trueOrFalseQuestions;
         if (questions && currentQuestionIndex < questions.length - 1) {
             const currentQuestion = questions[currentQuestionIndex];
             if (currentQuestion.correctAnswer === userAnswer) {

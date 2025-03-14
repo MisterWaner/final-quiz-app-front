@@ -5,20 +5,18 @@ import ContentSection from '../ContentSection';
 import ProgressBar from './ProgressBar';
 import ScoreIndicator from './ScoreIndicator';
 import EndGameCard from './Card/EndGameCard';
-import QuestionCard from './Card/QuestionCard';
+import QuestionDisplayer from './Card/QuestionDisplayer';
 
 import { useQuizStore } from '~/store/quiz-store';
-import QCMQuestionCard from './Card/QCMQuestionCard';
 import { useEffect, useState } from 'react';
 import type { Subject } from '~/lib/types';
 
 export default function Quiz() {
     const { type } = useParams();
 
-    const { getSubjectLists, generateQuiz } = useQuizStore();
+    const { getSubjectLists } = useQuizStore();
     const progress = useQuizStore((state) => state.progress);
     const totalProgress = useQuizStore((state) => state.totalProgress);
-
     const [subjects, setSubjects] = useState<Subject[]>([]);
 
     useEffect(() => {
@@ -26,9 +24,6 @@ export default function Quiz() {
             setSubjects(subjects);
         });
     }, []);
-
-    const names = subjects.map((subject) => subject.name);
-    console.log(names);
 
     return (
         <Wrapper>
@@ -57,11 +52,7 @@ export default function Quiz() {
                             : ''}
                     </h2>
                     <ContentSection>
-                        {names[0] === 'Mathématiques' ? (
-                            <QuestionCard />
-                        ) : (
-                            <QCMQuestionCard />
-                        )}
+                        <QuestionDisplayer />
                     </ContentSection>
                     <ContentSection>
                         <ScoreIndicator />

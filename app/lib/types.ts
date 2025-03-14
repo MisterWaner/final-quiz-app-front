@@ -13,10 +13,10 @@ export type Theme = {
     themePath: string;
 };
 
-export type Quiz = {
+export interface Quiz {
     id: number;
     questionType: QuestionType;
-    questions: Question[];
+    questions: (MultipleChoiceQuestion | TrueOrFalseQuestion | DirectQuestion)[];
     themeId: Theme['id'];
 }
 
@@ -45,5 +45,3 @@ export interface DirectQuestion extends QuestionBase {
     questionType: "direct";
     correctAnswer: string;
 }
-
-export type Question = MultipleChoiceQuestion | TrueOrFalseQuestion | DirectQuestion;

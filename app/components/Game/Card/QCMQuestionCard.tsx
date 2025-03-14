@@ -6,27 +6,23 @@ import {
     CardContent,
     CardFooter,
 } from '~/components/ui/card';
-import { RadioGroup } from '~/components/ui/radio-group';
 import { Label } from '~/components/ui/label';
 import Timer from '../Timer';
 import NextQuestionModal from '../Modals/NextQuestionModal';
 
 import { useQuizStore } from '~/store/quiz-store';
-import CustomRadioInput from '~/components/CustomRadioInput';
+import { Button } from '~/components/ui/button';
 
 export default function QCMQuestionCard() {
-    const {
-        questions,
-        currentQuestionIndex,
-        timer,
-        isTimerRunning,
-        startTimer,
-        resetTimer,
-        decrementTimer,
-    } = useQuizStore();
-    const userAnswer = useQuizStore((state) => state.userAnswer);
+    const { isTimerRunning, startTimer, resetTimer, decrementTimer } =
+        useQuizStore();
+    const quiz = useQuizStore((state) => state.quiz);
+    const timer = useQuizStore((state) => state.timer);
+    const currentQuestionIndex = useQuizStore(
+        (state) => state.currentQuestionIndex
+    );
 
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    let questions = quiz.questions;
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -49,11 +45,12 @@ export default function QCMQuestionCard() {
     }
 
     function handleSelectOption(option: string) {
-        setSelectedOption(option);
-        console.log(option);
-        useQuizStore.setState({
-            userAnswer: selectedOption,
-        });
+        const selectedOption = option;
+        console.log(selectedOption);
+
+        useQuizStore.setState({ userAnswer: selectedOption });
+
+        return <NextQuestionModal handleSetResetTimer={handleSetResetTimer} />;
     }
 
     return (
@@ -74,22 +71,28 @@ export default function QCMQuestionCard() {
                 </p>
                 <Label className='mt-4'>Ta réponse :</Label>
 
-                <RadioGroup
-                    className='grid grid-cols-2 items-center gap-4 mt-4'
-                    value={selectedOption || undefined}
-                    onValueChange={handleSelectOption}
-                >
-                    {['Option 1', 'Option 2', 'Option3', 'Option 4'].map(
-                        (option) => (
-                            <CustomRadioInput
-                                label={option}
-                                value={option}
-                                id={option}
-                                key={option}
-                            />
+                <div className='grid grid-cols-2 items-center gap-4 mt-4'>
+                    {('choices' in currentQuestion
+                        ? currentQuestion.choices
+                        : []
+                    ).map(
+                        (choice, index) => (
+                            console.log(choice),
+                            (
+                                <Button
+                                    className='bg-stone-50 border border-stone-200 text-stone-950 hover:bg-stone-100'
+                                    key={index}
+                                    value={choice as string}
+                                    onClick={() =>
+                                        handleSelectOption(choice as string)
+                                    }
+                                >
+                                    {choice}
+                                </Button>
+                            )
                         )
                     )}
-                </RadioGroup>
+                </div>
 
                 <Timer />
             </CardContent>

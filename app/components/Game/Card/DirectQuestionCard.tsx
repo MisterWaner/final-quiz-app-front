@@ -10,40 +10,20 @@ import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
 import Timer from '../Timer';
 import { useQuizStore } from '~/store/quiz-store';
-import type { DirectQuestion, MultipleChoiceQuestion, QuestionType, TrueOrFalseQuestion } from '~/lib/types';
 
 import NextQuestionModal from '../Modals/NextQuestionModal';
 
-export default function QuestionCard() {
-    const {
-        directQuestions,
-        multipleChoiceQuestions,
-        trueOrFalseQuestions,
-        currentQuestionIndex,
-        timer,
-        isTimerRunning,
-        startTimer,
-        resetTimer,
-        decrementTimer,
-        questionType,
-    } = useQuizStore();
+export default function DirectQuestionCard() {
+    const { isTimerRunning, startTimer, resetTimer, decrementTimer } =
+        useQuizStore();
     const userAnswer = useQuizStore((state) => state.userAnswer);
+    const quiz = useQuizStore((state) => state.quiz);
+    const timer = useQuizStore((state) => state.timer);
+    const currentQuestionIndex = useQuizStore(
+        (state) => state.currentQuestionIndex
+    );
 
-    let questions: (DirectQuestion | MultipleChoiceQuestion | TrueOrFalseQuestion)[];
-    switch (questionType) {
-        case 'multiple-choice':
-            questions = multipleChoiceQuestions;
-            break;
-        case 'true-or-false':
-            questions = trueOrFalseQuestions;
-            break;
-        case 'direct':
-            questions = directQuestions;
-            break;
-        default:
-            questions = [];
-            break;
-    }
+    let questions = quiz.questions;
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -62,6 +42,8 @@ export default function QuestionCard() {
     console.log(questions);
 
     const currentQuestion = questions[currentQuestionIndex];
+
+    console.log(currentQuestion);
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
