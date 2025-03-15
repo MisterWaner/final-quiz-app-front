@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useRevalidator } from 'react-router';
 import { Button } from '~/components/ui/button';
 import {
     AlertDialog,
@@ -10,6 +10,7 @@ import {
     AlertDialogAction,
 } from '~/components/ui/alert-dialog';
 import { RotateCcw, List } from 'lucide-react';
+
 import { useQuizStore } from '~/store/quiz-store';
 
 export default function SaveScoreModal() {
@@ -17,13 +18,15 @@ export default function SaveScoreModal() {
         resetScore,
         resetTimer,
         resetProgress,
-        generateQuestion,
+        resetQuiz,
         incrementSessionScore,
     } = useQuizStore();
     const score = useQuizStore((state) => state.score);
 
     const navigate = useNavigate();
-    const { type } = useParams();
+    const revalidator = useRevalidator();
+
+    const { type } = useParams<{ type: string }>();
 
     function handleSaveScoreInLocalStorage() {
         let savedScore = localStorage.getItem('score');
@@ -41,21 +44,23 @@ export default function SaveScoreModal() {
         console.log(score);
         incrementSessionScore();
         handleSaveScoreInLocalStorage();
-        updateScore(score);
+        //updateScore(score);
         resetScore();
         resetTimer();
         resetProgress();
+        resetQuiz();
         navigate('/jouer');
     }
 
     function handleRestart() {
         incrementSessionScore();
         handleSaveScoreInLocalStorage();
-        updateScore(score);
+        //updateScore(score);
         resetScore();
         resetTimer();
         resetProgress();
-        if (type) generateQuestion(type);
+        resetQuiz();
+        navigate('/jouer');
     }
 
     return (

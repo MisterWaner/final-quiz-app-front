@@ -42,6 +42,7 @@ type QuizAction = {
     incrementScore: () => void;
     incrementSessionScore: () => void;
     resetScore: () => void;
+    resetQuiz: () => void;
     setTimer: (timer: QuizState['timer']) => void;
     startTimer: (timer: QuizState['timer']) => void;
     stopTimer: () => void;
@@ -115,6 +116,14 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
             );
             return {} as Quiz;
         }
+    },
+    resetQuiz() {
+        set( {
+            quiz: {} as Quiz,
+            questions: [],
+            questionType: '' as QuestionType,
+            currentQuestionIndex: 0,
+        })
     },
     handleNextQuestion() {
         const  { currentQuestionIndex, questions } = get();

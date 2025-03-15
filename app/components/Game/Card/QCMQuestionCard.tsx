@@ -4,14 +4,13 @@ import {
     CardHeader,
     CardTitle,
     CardContent,
-    CardFooter,
 } from '~/components/ui/card';
 import { Label } from '~/components/ui/label';
 import Timer from '../Timer';
-import NextQuestionModal from '../Modals/NextQuestionModal';
+import AnswerAndNextQuestionModal from '../Modals/AnswerAndNextQuestionModal';
 
 import { useQuizStore } from '~/store/quiz-store';
-import { Button } from '~/components/ui/button';
+
 
 export default function QCMQuestionCard() {
     const { isTimerRunning, startTimer, resetTimer, decrementTimer } =
@@ -49,8 +48,6 @@ export default function QCMQuestionCard() {
         console.log(selectedOption);
 
         useQuizStore.setState({ userAnswer: selectedOption });
-
-        return <NextQuestionModal handleSetResetTimer={handleSetResetTimer} />;
     }
 
     return (
@@ -79,16 +76,11 @@ export default function QCMQuestionCard() {
                         (choice, index) => (
                             console.log(choice),
                             (
-                                <Button
-                                    className='bg-stone-50 border border-stone-200 text-stone-950 hover:bg-stone-100'
+                                <AnswerAndNextQuestionModal
                                     key={index}
-                                    value={choice as string}
-                                    onClick={() =>
-                                        handleSelectOption(choice as string)
-                                    }
-                                >
-                                    {choice}
-                                </Button>
+                                    handleSetResetTimer={handleSetResetTimer}
+                                    choice={choice as string}
+                                />
                             )
                         )
                     )}
@@ -96,9 +88,6 @@ export default function QCMQuestionCard() {
 
                 <Timer />
             </CardContent>
-            <CardFooter className='justify-end'>
-                <NextQuestionModal handleSetResetTimer={handleSetResetTimer} />
-            </CardFooter>
         </Card>
     );
 }

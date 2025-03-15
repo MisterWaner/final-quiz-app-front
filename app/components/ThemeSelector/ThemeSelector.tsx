@@ -15,7 +15,6 @@ export default function ThemeSelector() {
     const { getSubjectLists, generateQuiz, setTimer } = useQuizStore();
     const [subjects, setSubjects] = useState<Subject[]>([]);
 
-    
     useEffect(() => {
         const fetchSubjects = async () => {
             const subjects = await getSubjectLists();
@@ -24,7 +23,6 @@ export default function ThemeSelector() {
         };
         fetchSubjects();
     }, []);
-;
 
     return (
         <div className='mt-4 flex flex-col md:flex-row gap-4 md:w-2/4'>
@@ -42,7 +40,10 @@ export default function ThemeSelector() {
                                     to={`${themePath}`}
                                     className='cursor-pointer'
                                     onClick={() => {
-                                        generateQuiz({ subjectPath, themePath })
+                                        generateQuiz({
+                                            subjectPath,
+                                            themePath,
+                                        });
                                         setTimer(15);
                                     }}
                                 >

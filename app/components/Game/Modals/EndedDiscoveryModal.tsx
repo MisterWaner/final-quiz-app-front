@@ -16,17 +16,19 @@ import { useQuizStore } from '~/store/quiz-store';
 
 export default function EndedDiscoveryModal() {
     const navigate = useNavigate();
-    const { resetProgress, resetScore } = useQuizStore();
+    const { resetProgress, resetScore, resetQuiz } = useQuizStore();
 
     function handleRegister() {
         resetProgress();
         resetScore();
+        resetQuiz();
         navigate('/inscription');
     }
 
     function handleCancel() {
         resetProgress();
         resetScore();
+        resetQuiz();
         navigate('/');
     }
 
