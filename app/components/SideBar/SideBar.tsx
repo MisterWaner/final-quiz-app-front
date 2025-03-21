@@ -9,8 +9,18 @@ import {
     SidebarMenuButton,
 } from '~/components/ui/sidebar';
 import { menuLinks } from '~/lib/menu-links';
-
+import { useQuizStore } from '~/store/quiz-store';
 export default function SideBar() {
+
+    const {resetQuiz, resetProgress, resetScore, resetTimer} = useQuizStore();
+
+    function handleReset() {
+        resetQuiz();
+        resetProgress();
+        resetScore();
+        resetTimer();
+    }
+
     return (
         <Sidebar className='fixed bg-stone-950 top-28 h-full'>
             <SidebarContent className='bg-stone-950 text-white w-full'>
@@ -23,7 +33,7 @@ export default function SideBar() {
                                     key={item.id}
                                 >
                                     <SidebarMenuButton asChild>
-                                        <Link to={item.path}>
+                                        <Link to={item.path} onClick={handleReset}>
                                             <item.icon />
                                             <span>{item.label}</span>
                                         </Link>

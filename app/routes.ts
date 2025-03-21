@@ -6,6 +6,7 @@ import {
     route,
 } from '@react-router/dev/routes';
 
+
 export default [
     layout('components/Main/main-layout.tsx', [
         index('routes/homepage.tsx'),
@@ -17,6 +18,7 @@ export default [
         ]),
 
         route('classements', 'routes/ranking.tsx'),
-        route('connexion', 'routes/login.tsx'),
+        route('connexion', 'routes/login-page.tsx'),
+        route('inscription', 'routes/signin-page.tsx'),
     ]),
 ] satisfies RouteConfig;

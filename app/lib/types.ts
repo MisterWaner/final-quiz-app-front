@@ -16,11 +16,15 @@ export type Theme = {
 export interface Quiz {
     id: number;
     questionType: QuestionType;
-    questions: (MultipleChoiceQuestion | TrueOrFalseQuestion | DirectQuestion)[];
+    questions: (
+        | MultipleChoiceQuestion
+        | TrueOrFalseQuestion
+        | DirectQuestion
+    )[];
     themeId: Theme['id'];
 }
 
-export type QuestionType = "multiple-choice" | "true-or-false" | "direct";
+export type QuestionType = 'multiple-choice' | 'true-or-false' | 'direct';
 
 export interface QuestionBase {
     id: number;
@@ -30,18 +34,24 @@ export interface QuestionBase {
 }
 
 export interface MultipleChoiceQuestion extends QuestionBase {
-    questionType: "multiple-choice";
+    questionType: 'multiple-choice';
     choices: string[];
     correctAnswer: string;
 }
 
 export interface TrueOrFalseQuestion extends QuestionBase {
-    questionType: "true-or-false";
+    questionType: 'true-or-false';
     choices: boolean[];
     correctAnswer: boolean | string;
 }
 
 export interface DirectQuestion extends QuestionBase {
-    questionType: "direct";
+    questionType: 'direct';
     correctAnswer: string;
 }
+
+export type User = {
+    id?: string;
+    username?: string;
+    password?: string;
+};
