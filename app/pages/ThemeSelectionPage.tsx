@@ -1,4 +1,5 @@
 import ContentSection from '~/components/ContentSection';
+import ThemeSelector from '~/components/ThemeSelector/ThemeSelector';
 
 export default function ThemeSelectionPage() {
     return (
@@ -8,7 +9,7 @@ export default function ThemeSelectionPage() {
             </h2>
             <ContentSection>
                 <div className="mt-10">
-                    Theme Selector
+                    <ThemeSelector />
                 </div>
             </ContentSection>
         </>
