@@ -35,13 +35,13 @@ export interface QuestionBase {
 
 export interface MultipleChoiceQuestion extends QuestionBase {
     questionType: 'multiple-choice';
-    choices: string[];
+    options: string[];
     correctAnswer: string;
 }
 
 export interface TrueOrFalseQuestion extends QuestionBase {
     questionType: 'true-or-false';
-    choices: boolean[];
+    options: boolean[];
     correctAnswer: boolean | string;
 }
 
