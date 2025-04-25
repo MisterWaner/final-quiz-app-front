@@ -36,7 +36,7 @@ export interface QuestionBase {
 export interface MultipleChoiceQuestion extends QuestionBase {
     questionType: 'multiple-choice';
     options: string[];
-    correctAnswer: string;
+    correctAnswer: string | string[];
 }
 
 export interface TrueOrFalseQuestion extends QuestionBase {

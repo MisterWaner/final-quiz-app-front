@@ -127,6 +127,8 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
 
         if (questions && currentQuestionIndex < questions.length - 1) {
             const currentQuestion = questions[currentQuestionIndex];
+            console.log("Réponse utilisater", userAnswer);
+            console.log("Réponse correcte", currentQuestion.correctAnswer);
 
             if (currentQuestion.correctAnswer === userAnswer) {
                 set({
@@ -141,7 +143,7 @@ export const useQuizStore = create<QuizState & QuizAction>((set, get) => ({
             } else if (currentQuestion.correctAnswer !== userAnswer) {
                 set({
                     dialog: {
-                        title: `Dommage, mauvaise réponse... La bonne réponse est ${currentQuestion.correctAnswer}`,
+                        title: `Dommage, mauvaise réponse... La bonne réponse est ${currentQuestion.correctAnswer} `,
                         style: 'text-red-500',
                         actionStyle:
                             'bg-red-500 text-slate-50 hover:bg-red-500/90',

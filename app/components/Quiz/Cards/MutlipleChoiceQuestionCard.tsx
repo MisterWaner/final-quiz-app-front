@@ -1,15 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '~/components/ui/card';
+import { useEffect } from 'react';
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+    CardFooter,
+} from '~/components/ui/card';
 import { Label } from '~/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 import Timer from '../Timer';
 
 import { useQuizStore } from '~/store/quiz-store';
-import MultipleChoiceNextQuestionModal from '../Modals/MultipleChoiceNextQuestionModal';
+import NextQuestionModal from '../Modals/NextQuestionModal';
+import CapitalsRadioGroup from '../RadioGroup/CapitalsRadioGroup';
+import { Flag } from 'lucide-react';
+import FlagsRadioGroup from '../RadioGroup/FlagsRadioGroup';
 
 export default function MutlipleChoiceQuestionCard() {
     const { isTimerRunning, startTimer, resetTimer, decrementTimer } =
         useQuizStore();
     const quiz = useQuizStore((state) => state.quiz);
+    const userAnswer = useQuizStore((state) => state.userAnswer);
     const timer = useQuizStore((state) => state.timer);
     const currentQuestionIndex = useQuizStore(
         (state) => state.currentQuestionIndex
@@ -36,6 +47,13 @@ export default function MutlipleChoiceQuestionCard() {
         resetTimer();
     }
 
+    function handleRadioInput(value: string) {
+        console.log(value);
+        useQuizStore.setState({
+            userAnswer: value,
+        });
+    }
+
     return (
         <Card
             className='md:w-1/2 mx-auto mt-24'
@@ -52,25 +70,12 @@ export default function MutlipleChoiceQuestionCard() {
                 </p>
                 <Label className='mt-4'>Ta réponse :</Label>
 
-                <div className='grid grid-cols-2 items-center gap-4 mt-4'>
-                    {('options' in currentQuestion
-                        ? currentQuestion.options
-                        : []
-                    ).map(
-                        (option, index) => (
-                            console.log(option),
-                            (
-                                <MultipleChoiceNextQuestionModal
-                                    key={index}
-                                    handleSetResetTimer={handleSetResetTimer}
-                                    option={option as string}
-                                />
-                            )
-                        )
-                    )}
-                </div>
+                <FlagsRadioGroup handleRadioInput={handleRadioInput} />
                 <Timer />
             </CardContent>
+            <CardFooter className='justify-end'>
+                <NextQuestionModal handleSetResetTimer={handleSetResetTimer} />
+            </CardFooter>
         </Card>
     );
 }

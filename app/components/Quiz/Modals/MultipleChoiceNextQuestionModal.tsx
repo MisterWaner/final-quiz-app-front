@@ -43,7 +43,7 @@ export default function MultipleChoiceNextQuestionModal({
             <AlertDialogTrigger asChild>
                 <Input
                     className='bg-slate-50 border border-slate-200 text-slate-950 hover:bg-slate-100 cursor-pointer'
-                    type='button'
+                    type='radio'
                     value={userAnswer as string}
                     placeholder={option}
                     onClick={handleSubmit}
