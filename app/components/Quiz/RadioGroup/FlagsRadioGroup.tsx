@@ -10,6 +10,7 @@ export default function FlagsRadioGroup({
 }) {
     const userAnswer = useQuizStore((state) => state.userAnswer);
     const quiz = useQuizStore((state) => state.quiz);
+    const timer = useQuizStore((state) => state.timer);
     const currentQuestionIndex = useQuizStore(
         (state) => state.currentQuestionIndex
     );
@@ -26,19 +27,18 @@ export default function FlagsRadioGroup({
         >
             {('options' in currentQuestion ? currentQuestion.options : []).map(
                 (option, index) => (
-                    //console.log(option),
-                    <div className='flex items-center space-x-4 w-full' key={index}>
+                    <div
+                        className='flex items-center space-x-4 w-full'
+                        key={index}
+                    >
                         <RadioGroupItem
                             value={option as string}
-                            id={`flag-${index}`}
+                            id={option as string}
+                            disabled={timer === 0}
+                            className='cursor-pointer'
                         />
-                        <Label htmlFor={`flag-${index}`}>
-                            <span>{index + 1}</span>
-                            <img
-                                className='w-32 h-24 object-cover rounded shadow'
-                                src={`${option as string}`}
-                                alt={option as string}
-                            />
+                        <Label htmlFor={option as string} className='cursor-pointer'>
+                            {option as string}
                         </Label>
                     </div>
                 )

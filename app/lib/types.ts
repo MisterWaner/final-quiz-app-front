@@ -31,6 +31,7 @@ export interface QuestionBase {
     questionType: QuestionType;
     theme: Theme;
     questionText: string;
+    imageUrl?: string;
 }
 
 export interface MultipleChoiceQuestion extends QuestionBase {
@@ -38,6 +39,7 @@ export interface MultipleChoiceQuestion extends QuestionBase {
     options: string[];
     correctAnswer: string | string[];
 }
+
 
 export interface TrueOrFalseQuestion extends QuestionBase {
     questionType: 'true-or-false';

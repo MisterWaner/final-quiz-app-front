@@ -10,6 +10,7 @@ export default function CapitalsRadioGroup({
 }) {
     const userAnswer = useQuizStore((state) => state.userAnswer);
     const quiz = useQuizStore((state) => state.quiz);
+    const timer = useQuizStore((state) => state.timer);
     const currentQuestionIndex = useQuizStore(
         (state) => state.currentQuestionIndex
     );
@@ -26,13 +27,17 @@ export default function CapitalsRadioGroup({
         >
             {('options' in currentQuestion ? currentQuestion.options : []).map(
                 (option, index) => (
-                    //console.log(option),
                     <div className='flex items-center space-x-4' key={index}>
                         <RadioGroupItem
                             value={option as string}
                             id={option as string}
+                            disabled={timer === 0}
+                            className='cursor-pointer '
                         />
-                        <Label htmlFor={option as string}>
+                        <Label
+                            htmlFor={option as string}
+                            className='cursor-pointer'
+                        >
                             {option as string}
                         </Label>
                     </div>
