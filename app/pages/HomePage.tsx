@@ -1,7 +1,7 @@
-import { Link } from "react-router";
-import { Button } from "~/components/ui/button";
-import ninjaDino from '/ninja-velociraptor.svg'
-import ContentSection from "~/components/ContentSection";
+import { Link } from 'react-router';
+import { Button } from '~/components/ui/button';
+import ninjaDino from '/ninjadino.png';
+import ContentSection from '~/components/ContentSection';
 export default function HomePage() {
     return (
         <>
@@ -10,7 +10,12 @@ export default function HomePage() {
             </h2>
             <ContentSection>
                 <div className='mt-20 flex flex-col items-center justify-center md:flex-row'>
-                    <img src={ninjaDino} alt='' className='w-3/6 md:w-1/4' />
+                    <img
+                        src={ninjaDino}
+                        alt=''
+                        className='w-3/6 md:w-1/4 select-none'
+                        onContextMenu={(e) => e.preventDefault()}
+                    />
                     <p className='text-xl font-semibold mt-10 md:mt-0 md:ml-10'>
                         Te voilà sur NinjaQuiz, un jeu pour te faire pratiquer
                         un ensemble de matières dans le but de t'améliorer, de
