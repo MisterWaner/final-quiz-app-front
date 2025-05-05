@@ -7,6 +7,7 @@ import type { Subject } from '~/lib/types';
 import ContentSection from '~/components/ContentSection';
 import ScoreIndicator from '~/components/Quiz/ScoreIndicator';
 import ProgressBar from '~/components/Quiz/ProgressBar';
+import EndGameCard from '~/components/Quiz/Cards/EndGameCard';
 
 export default function QuizPage() {
     const { type } = useParams();
@@ -24,7 +25,9 @@ export default function QuizPage() {
         <Wrapper>
             {progress === totalProgress ? (
                 <>
-                    <ContentSection>coucou</ContentSection>
+                    <ContentSection>
+                        <EndGameCard />
+                    </ContentSection>
                     <ContentSection>
                         <ScoreIndicator />
                         <ProgressBar />
