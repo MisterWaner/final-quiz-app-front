@@ -19,4 +19,10 @@ export default [
         route('connexion', 'routes/loginRoute.tsx'),
         route('inscription', 'routes/signinRoute.tsx'),
     ]),
+    layout('Layout/AccountLayout.tsx', [
+        ...prefix('mon-compte', [
+            index('routes/accountHomeRoute.tsx'),
+            route('parametres', 'routes/userSettingsRoute.tsx'),
+        ]),
+    ]),
 ] satisfies RouteConfig;

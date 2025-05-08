@@ -1,4 +1,4 @@
-import { User, Settings, ChartArea, Boxes, Home, LogIn } from 'lucide-react';
+import { User, Settings, ChartArea, Boxes, Home, LogIn, LogOut } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const menuLinks: {
@@ -51,6 +51,12 @@ const userMenuLinks: {
         path: '/mon-compte/parametres',
         icon: Settings,
     },
+    {
+        id: 3,
+        label: 'Déconnexion',
+        path: '/connexion',
+        icon: LogOut,
+    }
 ];
 
 export { menuLinks, userMenuLinks };
